@@ -14,7 +14,11 @@ async function run() {
   try {
     const context = github.context;
     
-    const pr = core.getInput("pr", { required: true }) || false;
+    const prStringInput = core.getInput("pr", {
+      required: false
+    });
+    const pr: boolean = prStringInput === "true";
+    
     const logUrl = pr ? `https://github.com/${context.repo.owner}/${context.repo.repo}/pull/${context.event.number}/checks` : `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${context.sha}/checks`;
 
     const token = core.getInput("token", { required: true });
