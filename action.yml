@@ -1,10 +1,18 @@
-name: "Deployment Action"
+name: "Create Deployment Action"
 description: "Creates a GitHub Deployment"
-author: "chrnorm"
+author: "altinukshini"
 branding:
   icon: arrow-up
   color: black
 inputs:
+  transient_environment:
+    description: "Is this deployment transient"
+    default: true
+    required: false
+  pr:
+    description: "Is this deployment being created from a PR"
+    default: false
+    required: false
   initial_status:
     description: "Initial status for the deployment"
     default: "pending"
