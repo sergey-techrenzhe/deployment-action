@@ -13,13 +13,15 @@ type DeploymentState =
 async function run() {
   try {
     const context = github.context;
-    const logUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${context.sha}/checks`;
+    
+    const pr = core.getInput("pr", { required: true }) || false;
+    const logUrl = pr ? `https://github.com/${context.repo.owner}/${context.repo.repo}/pull/${context.event.number}/checks` : `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${context.sha}/checks`;
 
     const token = core.getInput("token", { required: true });
     const ref = core.getInput("ref", { required: false }) || context.ref;
     const url = core.getInput("target_url", { required: false }) || logUrl;
-    const environment =
-      core.getInput("environment", { required: false }) || "production";
+    const payload = `{"web_url": "${url}"}`
+    const environment = core.getInput("environment", { required: false }) || "production";
     const description = core.getInput("description", { required: false });
     const initialStatus =
       (core.getInput("initial_status", {
@@ -28,8 +30,12 @@ async function run() {
     const autoMergeStringInput = core.getInput("auto_merge", {
       required: false
     });
+    const transientEnvironmentStringInput = core.getInput("transient_environment", {
+      required: false
+    });
 
     const auto_merge: boolean = autoMergeStringInput === "true";
+    const transient_environment: boolean = transientEnvironmentStringInput === "true";
 
     const client = new github.GitHub(token, { previews: ["flash", "ant-man"] });
 
@@ -37,9 +43,10 @@ async function run() {
       owner: context.repo.owner,
       repo: context.repo.repo,
       ref: ref,
+      payload,
       required_contexts: [],
       environment,
-      transient_environment: true,
+      transient_environment,
       auto_merge,
       description
     });
@@ -49,7 +56,8 @@ async function run() {
       deployment_id: deployment.data.id,
       state: initialStatus,
       log_url: logUrl,
-      environment_url: url
+      environment_url: url,
+      description
     });
 
     core.setOutput("deployment_id", deployment.data.id.toString());
