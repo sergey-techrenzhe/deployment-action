@@ -6,11 +6,14 @@ A GitHub action to create [Deployments](https://developer.github.com/v3/repos/de
 
 | name             | description                                                                                                                                                                                                                                                                                                                                                                                                   |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pr`             | (optional - default is `false`) If Deployment is being created from a PR |
+| `pr_id`          | (optional) Pass the PR ID to this param if `pr` is set to "true"         |
+| `transient_environment` | (optional - default is `false`) Set this deployment as transient  |
 | `initial_status` | (Optional) Initial status for the deployment. Must be one of the [accepted strings](https://developer.github.com/v3/repos/deployments/#create-a-deployment-status)                                                                                                                                                                                                                                            |
 | `token`          | GitHub token                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `target_url`     | (Optional) The target URL. This should be the URL of the app once deployed                                                                                                                                                                                                                                                                                                                                    |
 | `description`    | (Optional) A description to give the environment                                                                                                                                                                                                                                                                                                                                                              |
-| `auto_merge`     | (Optional - default is `false`) Whether to attempt to auto-merge the default branch into the branch that the action is running on if set to `"true"`. More details in the [GitHub deployments API](https://developer.github.com/v3/repos/deployments/#parameters-1). Warning - setting this to `"true"` has caused this action to [fail in some cases](https://github.com/chrnorm/deployment-action/issues/1) |
+| `auto_merge`     | (Optional - default is `false`) Whether to attempt to auto-merge the default branch into the branch that the action is running on if set to `"true"`. More details in the [GitHub deployments API](https://developer.github.com/v3/repos/deployments/#parameters-1). Warning - setting this to `"true"` has caused this action to [fail in some cases](https://github.com/altinukshini/deployment-action/issues/1) |
 | `ref`            | (Optional) The ref to deploy. This can be a branch, tag, or SHA. More details in the [GitHub deployments API](https://developer.github.com/v3/repos/deployments/#parameters-1). |
 
 ## Action outputs
@@ -69,7 +72,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - uses: chrnorm/deployment-action@releases/v1
+      - uses: altinukshini/deployment-action@releases/v1
         name: Create GitHub deployment
         id: deployment
         with:
@@ -83,7 +86,7 @@ jobs:
 
       - name: Update deployment status (success)
         if: success()
-        uses: chrnorm/deployment-status@releases/v1
+        uses: altinukshini/deployment-status@releases/v1
         with:
           token: "${{ github.token }}"
           target_url: http://my-app-url.com
@@ -92,7 +95,7 @@ jobs:
 
       - name: Update deployment status (failure)
         if: failure()
-        uses: chrnorm/deployment-status@releases/v1
+        uses: altinukshini/deployment-status@releases/v1
         with:
           token: "${{ github.token }}"
           target_url: http://my-app-url.com

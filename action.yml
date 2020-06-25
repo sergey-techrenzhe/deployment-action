@@ -5,6 +5,17 @@ branding:
   icon: arrow-up
   color: black
 inputs:
+  transient_environment:
+    description: "Set this deployment as transient"
+    default: "false"
+    required: false
+  pr:
+    description: "Whether deployment is being created from a PR"
+    default: "false"
+    required: false
+  pr_id:
+    description: "If pr is set to true, pass the PR ID here"
+    required: false
   initial_status:
     description: "Initial status for the deployment"
     default: "pending"
