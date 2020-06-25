@@ -18,8 +18,10 @@ async function run() {
       required: false
     });
     const pr: boolean = prStringInput === "true";
-    
-    const logUrl = pr ? `https://github.com/${context.repo.owner}/${context.repo.repo}/pull/${context.event.number}/checks` : `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${context.sha}/checks`;
+
+    const pr_id = core.getInput("pr_id", {required: false}) || 0;
+
+    const logUrl = pr ? `https://github.com/${context.repo.owner}/${context.repo.repo}/pull/${pr_id}/checks` : `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${context.sha}/checks`;
 
     const token = core.getInput("token", { required: true });
     const ref = core.getInput("ref", { required: false }) || context.ref;
